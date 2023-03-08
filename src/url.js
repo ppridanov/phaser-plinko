@@ -1,0 +1,1 @@
+const url = 'rpo.logycom.kz:44313';
