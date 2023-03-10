@@ -4,42 +4,37 @@ import Button from '../objects/button'
 export default class MainScene extends Phaser.Scene {
   isLoaded
   controller
-  rulesText
-  bet
-  draw
-  rulesScene
-  underline
-  _y
-  timedEvent
-  timer
-  passed
-  isBroadcast
-  onePercent
-  percentLine
-  nmb
   bg
   logo
-  currentButton
+  exitButton
+  soundButton
+  rulesButton
   i18n: any
 
   constructor() {
     super({ key: 'MainScene' })
-    this._y = 960
     this.controller = null
     this.isLoaded = false
   }
 
   create() {
-    // this.timedEvent = this.time.addEvent({
-    //   delay: 1000,
-    //   callback: () => this.onTimerEvent(this.timer),
-    //   callbackScope: this.controller,
-    //   loop: true
-    // })
-
+    const width = this.sys.canvas.width;
+    // Add bg image
     this.bg = this.add.image(0, 0, 'bg').setOrigin(0)
     this.logo = this.add.image(0, 8, 'logo').setOrigin(0)
-    this.logo.setX(this.sys.canvas.width / 2 - this.logo.width / 2 + 4);
+    this.logo.setX(width / 2 - this.logo.width / 2 + 4);
+
+    // Add buttons
+    this.exitButton = this.add.image(0, 60, 'exit-button').setOrigin(0);
+    this.exitButton.setX(width - this.exitButton.width - 65);
+
+    this.rulesButton = this.add.image(65, 60, 'rules-button').setOrigin(0);
+
+    this.soundButton = this.add.image(65, 170, 'sound-button').setOrigin(0);
+
+
+
+
 
     // //Add callbacks from controller
     // // @ts-ignore
@@ -54,7 +49,7 @@ export default class MainScene extends Phaser.Scene {
     //   })
 
     // // @ts-ignore
-    // this.launchScenes()
+    this.launchScenes()
   }
 
   launchScenes = () => {
@@ -62,12 +57,8 @@ export default class MainScene extends Phaser.Scene {
     const waitEvents = this.plugins.get('rexWaitEvents').add(() => {
       this.isLoaded = true
     }, this)
-    this.scene.launch('Header')
-    this.scene.launch('Footer')
+    this.scene.launch('Bottom')
     this.scene.launch('Control')
-    // this.scene.launch('WheelScene')
-    // this.scene.launch('Bets')
-    // this.scene.launch('Draw')
 
     // this.scene.launch('BottomBar');
     // this.scene.launch('PreviousBets');
@@ -76,65 +67,5 @@ export default class MainScene extends Phaser.Scene {
     // this.scene.launch('Register');
 
     this.time.delayedCall(5, waitEvents.waitCallback())
-  }
-
-  setAmount = text => {
-    return this.bet.setText(this.i18n.t('bet') + ': ' + text)
-  }
-
-  setController = controller => {
-    this.controller = controller
-  }
-
-  onTimerEvent = timer => {
-    if (timer) {
-      this.timer--
-      this.passed++
-      this.updateTimer()
-    }
-  }
-
-  startTimer() {
-    if (!this.onePercent) {
-      this.onePercent = this.sys.canvas.width / (this.passed + this.timer)
-    }
-    if (!this.percentLine) {
-      this.percentLine = this.add.rectangle(0, 0, 0, 20, 0x18c83a, 1).setOrigin(0)
-    }
-
-    this.tweens.add({
-      targets: this.percentLine,
-      endAngle: { from: 0, to: this.onePercent * (this.passed + 2) },
-      duration: 1000,
-      onComplete: () => this.setBroadcast(false)
-    })
-  }
-
-  updateTimer = () => {
-    if (!this.isBroadcast) {
-      this.tweens.addCounter({
-        from: this.onePercent * this.passed,
-        to: this.sys.canvas.width,
-        duration: this.timer * 1000,
-        onUpdate: tween => {
-          let t = tween.getValue()
-          this.percentLine.width = t
-        }
-      })
-    }
-  }
-
-  setTimer = (timer, passed, nmb) => {
-    this.timer = timer
-    if (passed) this.passed = passed
-    if (nmb) this.nmb = nmb
-  }
-
-  setPassed = (passed: number) => {
-    this.passed = passed
-  }
-
-  setBroadcast(state) {
-    this.isBroadcast = state
   }
 }

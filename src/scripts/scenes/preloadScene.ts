@@ -51,9 +51,14 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.image('asteroid-1', 'assets/img/asteroid-green.png')
     this.load.image('asteroid-2', 'assets/img/asteroid-yellow.png')
     this.load.image('asteroid-3', 'assets/img/asteroid-red.png')
-    this.load.image('close-icon', 'assets/img/close-icon.png')
-    this.load.image('rules-icon', 'assets/img/rules-icon.png')
-    this.load.image('sound-icon', 'assets/img/sound-icon.png')
+    this.load.image('exit-button', 'assets/img/close-icon.png')
+    this.load.image('rules-button', 'assets/img/rules-icon.png')
+    this.load.image('sound-button', 'assets/img/sound-icon.png')
+    this.load.image('bottom-bg', 'assets/img/bottom-bar.png')
+    this.load.image('bets-bg', 'assets/img/bets-bg.png')
+    this.load.image('bet-bg', 'assets/img/bet-bg.png')
+    this.load.spritesheet('plus-button', 'assets/img/plus.png', { frameWidth: 182 })
+    this.load.spritesheet('minus-button', 'assets/img/minus.png', { frameWidth: 182 })
 
     // AUDIO
     // this.load.audio('button', 'assets/sounds/button.mp3')
@@ -65,7 +70,7 @@ export default class PreloadScene extends Phaser.Scene {
     // @ts-ignore
     this.load.rexWebFont({
       custom: {
-        families: ['Roboto Bold', 'Roboto', 'Montserrat', 'Montserrat Bold'],
+        families: ['Montserrat', 'Montserrat Bold', 'Inter'],
         urls: ['./assets/fonts/fonts.css']
       }
     })
@@ -76,15 +81,14 @@ export default class PreloadScene extends Phaser.Scene {
     this.scene.bringToTop()
 
     // Register fonts
-    this.registry.set('font', 'Roboto')
-    this.registry.set('fontBold', 'Roboto Bold')
+    this.registry.set('font', 'Inter')
     this.registry.set('fontM', 'Montserrat')
     this.registry.set('fontBoldM', 'Montserrat Bold')
 
     // Create controller
     this.controller = new Controller(this, this.i18n)
-    // @ts-ignore
-    this.scene.get('MainScene').setController(this.controller)
+    // // @ts-ignore
+    // this.scene.get('MainScene').setController(this.controller)
 
     // create main container
     this.container = this.add.container()
@@ -163,7 +167,7 @@ export default class PreloadScene extends Phaser.Scene {
     this.container.add([this.bg, this.asteroids, clickText, clickTextSec])
     const timer = setInterval(() => {
       if (this.controller.ws.readyState === 1) {
-        // this.scene.stop();
+        this.scene.stop();
         clickText.setText(this.i18n.t('preload>first').toUpperCase())
         clickTextSec.setText(this.i18n.t('preload>second').toUpperCase())
         this.isLoading = false
