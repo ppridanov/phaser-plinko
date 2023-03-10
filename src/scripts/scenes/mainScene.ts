@@ -1,4 +1,5 @@
 import Phaser from 'phaser'
+import Button from '../objects/button'
 
 export default class MainScene extends Phaser.Scene {
   isLoaded
@@ -17,6 +18,7 @@ export default class MainScene extends Phaser.Scene {
   percentLine
   nmb
   bg
+  logo
   currentButton
   i18n: any
 
@@ -28,29 +30,31 @@ export default class MainScene extends Phaser.Scene {
   }
 
   create() {
-    this.timedEvent = this.time.addEvent({
-      delay: 1000,
-      callback: () => this.onTimerEvent(this.timer),
-      callbackScope: this.controller,
-      loop: true
-    })
+    // this.timedEvent = this.time.addEvent({
+    //   delay: 1000,
+    //   callback: () => this.onTimerEvent(this.timer),
+    //   callbackScope: this.controller,
+    //   loop: true
+    // })
 
     this.bg = this.add.image(0, 0, 'bg').setOrigin(0)
+    this.logo = this.add.image(0, 8, 'logo').setOrigin(0)
+    this.logo.setX(this.sys.canvas.width / 2 - this.logo.width / 2 + 4);
 
-    //Add callbacks from controller
-    // @ts-ignore
-    this.scene.get('Bets').setCallback(this.controller.addBet)
+    // //Add callbacks from controller
+    // // @ts-ignore
+    // this.scene.get('Bets').setCallback(this.controller.addBet)
 
-    this.scene
-      .get('Control')
-          // @ts-ignore
-      .setCallbacks({
-        bet: this.controller.addBet,
-        auto: this.controller.autoBet
-      })
+    // this.scene
+    //   .get('Control')
+    //       // @ts-ignore
+    //   .setCallbacks({
+    //     bet: this.controller.addBet,
+    //     auto: this.controller.autoBet
+    //   })
 
-    // @ts-ignore
-    this.launchScenes()
+    // // @ts-ignore
+    // this.launchScenes()
   }
 
   launchScenes = () => {

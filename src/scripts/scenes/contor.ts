@@ -1,5 +1,4 @@
 import RoundRectangle from 'phaser3-rex-plugins/plugins/roundrectangle.js'
-import ControlButton from '../objects/control-button'
 
 export default class Control extends Phaser.Scene {
   width
@@ -48,36 +47,6 @@ export default class Control extends Phaser.Scene {
 
     // Types = 0 - green, 1 - yellow, 2 - red
     // Green
-    this.green = new ControlButton(
-      this,
-      (buttonWidth - 10) * 2 - this.autoPlay.width,
-      30,
-      0,
-      '0x008207',
-      'Зеленый',
-      this.callbacks['bet']
-    )
-    // Yellow
-    this.yellow = new ControlButton(
-      this,
-      (buttonWidth - 6) * 3 - this.autoPlay.width,
-      30,
-      1,
-      '0x946013',
-      'Желтый',
-      this.callbacks['bet']
-    )
-    // Red
-    this.red = new ControlButton(
-      this,
-      (buttonWidth - 5) * 4 - this.autoPlay.width,
-      30,
-      2,
-      '0x700303',
-      'Красный',
-      this.callbacks['bet']
-    )
-
     // curr ent bet
     const currentBet = this.add.container()
     this.currentBetText = this.add

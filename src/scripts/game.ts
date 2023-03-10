@@ -1,16 +1,9 @@
 import 'phaser';
-import Bets from './scenes/bets';
 import BottomBar from './scenes/bottomBar';
 import ConnectingScene from './scenes/connectingScene';
-import GameStatusScene from './scenes/gamestatus';
 import MainScene from './scenes/mainScene';
-import MenuScene from './scenes/menu';
-import Modal from './scenes/modal';
 import PreloadScene from './scenes/preloadScene';
-import PreviousBets from './scenes/previousBets';
 import RulesScene from './scenes/rules';
-import WheelScene from './scenes/wheel';
-import Draw from "./scenes/draw";
 import Register from "./scenes/register";
 import WebFontLoaderPlugin from "phaser3-rex-plugins/plugins/webfontloader-plugin.js";
 import RoundRectanglePlugin from "phaser3-rex-plugins/plugins/roundrectangle-plugin.js";
@@ -64,7 +57,7 @@ const config = {
             },
         ],
     },
-    scene: [PreloadScene, MainScene, WheelScene, Control, Draw, GameStatusScene, Header, Footer, Bets, BottomBar, PreviousBets, ConnectingScene, MenuScene, RulesScene, Modal, Register],
+    scene: [PreloadScene, MainScene, Control, Header, Footer, BottomBar, ConnectingScene, RulesScene, Register],
 
 }
 

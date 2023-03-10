@@ -4,7 +4,7 @@
     font-weight: 700;
     font-display: swap;
     src: url(./robotoBold.woff2);
-format("woff2");
+    format: ("woff2");
 }
 
 @font-face {
@@ -13,5 +13,23 @@ format("woff2");
     font-weight: 700;
     font-display: swap;
     src: url(./robotoMedium.woff2);
-format("woff2");
+    format: ("woff2");
+}
+
+@font-face {
+    font-family: "Montserrat Bold";
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url(../fonts/montserrat/Montserrat-ExtraBold.ttf);
+    format: ("ttf");
+}
+
+@font-face {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url(../fonts/montserrat/Montserrat-Regular.ttf);
+    format: ("ttf");
 }
