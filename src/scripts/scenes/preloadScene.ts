@@ -64,7 +64,7 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.image('rate-green', 'assets/img/rate-green.png')
     this.load.image('rate-yellow', 'assets/img/rate-yellow.png')
     this.load.image('rate-red', 'assets/img/rate-red.png')
-
+    this.load.image('spacesheep', 'assets/img/space.png')
 
     // AUDIO
     // this.load.audio('button', 'assets/sounds/button.mp3')

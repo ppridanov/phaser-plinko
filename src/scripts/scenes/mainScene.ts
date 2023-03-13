@@ -32,10 +32,6 @@ export default class MainScene extends Phaser.Scene {
 
     this.soundButton = this.add.image(65, 170, 'sound-button').setOrigin(0);
 
-
-
-
-
     // //Add callbacks from controller
     // // @ts-ignore
     // this.scene.get('Bets').setCallback(this.controller.addBet)
@@ -59,6 +55,7 @@ export default class MainScene extends Phaser.Scene {
     }, this)
     this.scene.launch('Bottom')
     this.scene.launch('Control')
+    this.scene.launch('Game')
 
     // this.scene.launch('BottomBar');
     // this.scene.launch('PreviousBets');
