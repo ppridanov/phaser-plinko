@@ -48,7 +48,7 @@ export default class Controller {
 
   init() {
     let SESSION_ID =
-      new URL(String(document.location)).searchParams.get('session') || '42B2EFAD97B0F0663FB08486ECDCA870'
+      new URL(String(document.location)).searchParams.get('session') || '7FFCE3CC1D104012EA7D015C4B26447E'
     this.ws = new WebSocket(`wss://${url}/${SESSION_ID}`) //threemen
     this.ws.onmessage = this.onMessage
     this.ws.onclose = () => {

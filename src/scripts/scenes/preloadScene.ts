@@ -1,5 +1,4 @@
 import Controller from '../controller'
-import { getCookie } from '../helpers'
 
 export default class PreloadScene extends Phaser.Scene {
   width
@@ -57,8 +56,15 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.image('bottom-bg', 'assets/img/bottom-bar.png')
     this.load.image('bets-bg', 'assets/img/bets-bg.png')
     this.load.image('bet-bg', 'assets/img/bet-bg.png')
-    this.load.spritesheet('plus-button', 'assets/img/plus.png', { frameWidth: 182 })
-    this.load.spritesheet('minus-button', 'assets/img/minus.png', { frameWidth: 182 })
+    this.load.spritesheet('plus-button', 'assets/img/plus.png', { frameWidth: 182, frameHeight: 131 })
+    this.load.spritesheet('minus-button', 'assets/img/minus.png', { frameWidth: 182, frameHeight: 131 })
+    this.load.image('button-green', 'assets/img/green.png')
+    this.load.image('button-yellow', 'assets/img/yellow.png')
+    this.load.image('button-red', 'assets/img/red.png')
+    this.load.image('rate-green', 'assets/img/rate-green.png')
+    this.load.image('rate-yellow', 'assets/img/rate-yellow.png')
+    this.load.image('rate-red', 'assets/img/rate-red.png')
+
 
     // AUDIO
     // this.load.audio('button', 'assets/sounds/button.mp3')
@@ -154,22 +160,22 @@ export default class PreloadScene extends Phaser.Scene {
       })
       .setOrigin(0.5, 0)
 
-    this.tweens.add({
-      targets: [clickText, clickTextSec],
-      alpha: {
-        from: 0,
-        to: 1
-      },
-      yoyo: true,
-      repeat: -1,
-      duration: 1000
-    })
     this.container.add([this.bg, this.asteroids, clickText, clickTextSec])
     const timer = setInterval(() => {
       if (this.controller.ws.readyState === 1) {
-        this.scene.stop();
+        this.scene.stop()
         clickText.setText(this.i18n.t('preload>first').toUpperCase())
         clickTextSec.setText(this.i18n.t('preload>second').toUpperCase())
+        this.tweens.add({
+          targets: [clickText, clickTextSec],
+          alpha: {
+            from: 0,
+            to: 1
+          },
+          yoyo: true,
+          repeat: -1,
+          duration: 1000
+        })
         this.isLoading = false
         clearInterval(timer)
       }
