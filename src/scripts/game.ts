@@ -23,7 +23,7 @@ const config = {
   scale: {
     parent: 'phaser-game',
     autoCenter: Phaser.Scale.CENTER_BOTH,
-    mode: Phaser.Scale.FIT,
+    // mode: Phaser.Scale.FIT,
     width: DEFAULT_WIDTH,
     height: DEFAULT_HEIGHT,
     fps: {
@@ -35,13 +35,16 @@ const config = {
   physics: {
     default: 'matter',
     matter: {
-        debug: {
-          showAxes: true,
-          showBounds: true,
-          showCollisions: true,
+        // debug: {
+        //   showAxes: true,
+        //   showBounds: true,
+        //   showCollisions: true,
           
-        },
-        enableSleeping: false
+        // },
+        enableSleeping: false,
+        gravity: {
+          y: .5
+        }
     }
   },
   plugins: {
