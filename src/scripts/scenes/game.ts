@@ -18,16 +18,20 @@ export default class Game extends Phaser.Scene {
     this.ROWS = 14
     this.MIN_COLS = 3
     this.BALL_SIZE = 42
-    this.SPACING = {x: 13, y: 4.5}
+    this.SPACING = { x: 13, y: 4.5 }
     this.pins = []
   }
 
   create() {
+    const CATEGORY_BALL = this.matter.world.nextCategory()
+    const CATEGORY_PIN = this.matter.world.nextCategory()
     // sizes
     this.width = this.sys.canvas.width
     this.heigth = this.sys.canvas.height
 
     // physics
+    this.matter.world.update60Hz()
+    // this.matter.world.setBounds();
     this.matter.world.setBounds(
       this.width / 2 - this.gameWidth / 2,
       380,
@@ -39,6 +43,9 @@ export default class Game extends Phaser.Scene {
       false,
       true
     )
+
+    this.matter.world.setGravity(0, 1)
+
     this.ufo = this.add.image(0, 0, 'spacesheep').setOrigin(0)
     this.ufo.setX(this.width / 2 - this.ufo.width / 2).setY(239)
     console.log(this.BALL_SIZE)
@@ -56,7 +63,8 @@ export default class Game extends Phaser.Scene {
         const pin = this.matter.add.image(x, y, 'pin')
         pin.setCircle(3)
         pin.setStatic(true)
-        pin.setBounce(.5)
+        pin.setBounce(0)
+        pin.setCollisionCategory(CATEGORY_PIN)
         console.log(pin.width)
         this.pins.add(pin)
       }
@@ -64,32 +72,46 @@ export default class Game extends Phaser.Scene {
 
     // const greenBall = this.matter.add.image(560, -500, 'ball-green').setOrigin(0).setCircle(18)
     // this.matter.world.add(greenBall)
-
-    for (let i = 0; i < 10; i++) {
-        const greenBall = this.matter.add.image(Phaser.Math.Between(500, 560), Phaser.Math.Between(-200, 0), 'ball-green').setOrigin(0).setCircle(18)
-        this.matter.world.add(greenBall)
+    const initialSettings = {
+      x: 500,
+      y: 0,
+      velocityX: 2,
+      velocityY: -2,
+      mass: 1,
+      friction: 0.1,
+      restitution: 0.8,
+      radius: 18
     }
 
+    let maxCount = 100
+    let count = 0
+    const interval = setInterval(() => {
+      if (count === maxCount) {
+        clearInterval(interval)
+      }
+      const greenBall = this.matter.add.image(initialSettings.x, initialSettings.y, 'ball-green')
+      greenBall.setCircle(initialSettings.radius)
+      greenBall.setVelocity(initialSettings.velocityX, initialSettings.velocityY)
+      greenBall.setMass(initialSettings.mass)
+      greenBall.setFriction(initialSettings.friction)
+      console.log(greenBall.body)
+      greenBall.setBounce(initialSettings.restitution)
+      greenBall.setCollisionCategory(CATEGORY_BALL)
+      greenBall.setCollidesWith(CATEGORY_PIN)
+      greenBall.setName(`ball_${count}`)
+      
+      count++;
+      this.matter.world.add(greenBall)
+    }, 500)
 
-    //     this.spacesheep = this.add.image(0, 0, 'spacesheep').setOrigin(0)
-    //     this.spacesheep.setX(this.width / 2 - this.spacesheep.width / 2).setY(300)
-        this.tweens.add({
-          targets: this.ufo,
-          y: Phaser.Math.Between(260, 300),
-          ease: Phaser.Math.Easing.Cubic.InOut,
-          duration: 3000,
-          yoyo: true,
-          repeat: -1
-        })
-        this.tweens.add({
-          targets: this.ufo,
-          x: Phaser.Math.Between(400, 550),
-          ease: Phaser.Math.Easing.Cubic.InOut,
-          duration: 3000,
-          yoyo: true,
-          repeat: -1
-        })
+    this.matter.world.on('collisionstart', (event, bodyA, bodyB) => {
+
+    })
   }
 
   createScene(rows) {}
+
+  update(time: number, delta: number): void {
+      console.log(this.game.loop.actualFps)
+  }
 }

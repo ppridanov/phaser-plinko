@@ -27,23 +27,25 @@ const config = {
     width: DEFAULT_WIDTH,
     height: DEFAULT_HEIGHT,
     fps: {
-      target: 2,
-      min: 2,
+      target: 30,
       forceSetTimeOut: true
     }
   },
   physics: {
     default: 'matter',
     matter: {
-        // debug: {
-        //   showAxes: true,
-        //   showBounds: true,
-        //   showCollisions: true,
+        debug: {
+          showAxes: true,
+          showBounds: true,
+          showCollisions: true,
           
-        // },
+        },
         enableSleeping: false,
         gravity: {
           y: .5
+        },
+        plugins: {
+            attractors: true
         }
     }
   },
