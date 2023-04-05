@@ -58,6 +58,7 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.image('bet-bg', 'assets/img/bet-bg.png')
     this.load.spritesheet('plus-button', 'assets/img/plus.png', { frameWidth: 154, frameHeight: 118 })
     this.load.spritesheet('minus-button', 'assets/img/minus.png', { frameWidth: 154, frameHeight: 118 })
+    this.load.spritesheet('auto-button', 'assets/img/autoButton.png', { frameWidth: 229, frameHeight: 196 })
     this.load.image('button-green', 'assets/img/green.png')
     this.load.image('button-yellow', 'assets/img/yellow.png')
     this.load.image('button-red', 'assets/img/red.png')

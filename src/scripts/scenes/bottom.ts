@@ -18,10 +18,12 @@ export default class Bottom extends Phaser.Scene {
   bets
   defaultBet
   bottomBg
+  currentBetIndex
   constructor() {
     super({ key: 'Bottom' })
     this.bets = [100, 200, 500]
-    this.defaultBet = this.bets[0]
+    this.currentBetIndex = 0
+    this.defaultBet = this.bets[this.currentBetIndex]
   }
 
   create() {
@@ -104,14 +106,30 @@ export default class Bottom extends Phaser.Scene {
 
     this.minus = this.add.image(0, 0, 'minus-button').setFrame(0).setOrigin(0)
     this.minus.setX(32).setY(44)
+    this.minus
+      .setInteractive({ cursor: 'pointer' })
+      .on('pointerdown', () => {
+        this.onChangeBetDown(this.minus)
+      })
+      .on('pointerup', () => {
+        this.onChangeBetUp(this.minus)
+        this.decreseBet()
+      })
 
     this.plus = this.add.image(0, 0, 'plus-button').setFrame(2).setOrigin(0)
     this.plus
       .setX(betsBg.width - this.plus.width - 25)
       .setY(44)
       .setInteractive({ cursor: 'pointer' })
-      .on('pointerdown', this.onChangeBetDown)
-      .on('pointerup', this.onChangeBetUp)
+      .on('pointerdown', () => {
+        this.onChangeBetDown(this.plus)
+      })
+      .on('pointerup', () => {
+        this.onChangeBetUp(this.plus)
+        this.increaseBet()
+      })
+
+    this.autoButton = this.add.image(0, 0, 'auto-button').setFrame(0)
 
     this.currentBet = this.add.text(
       0,
@@ -125,11 +143,55 @@ export default class Bottom extends Phaser.Scene {
     betContainer.setY(this.bottomBg.y + 215).setX(this.bottomBg.x + 41)
   }
 
-  onChangeBetDown = (event) => {
-    console.log(event)
+  createAutoPlayButton() {}
+
+  onChangeBetDown = target => {
+    target.setFrame(1)
   }
 
-  onChangeBetUp = (event, gameObject) => {
-    console.log(gameObject)
+  onChangeBetUp = target => {
+    target.setFrame(2)
+  }
+
+  increaseBet = () => {
+    if (this.currentBetIndex < this.bets.length - 1) {
+      // проверяем, не достигли ли мы конца массива
+      this.currentBetIndex++
+      // делаем что-то с текущим элементом массива
+    }
+    // блокируем кнопку увеличения, если достигли конца массива
+    if (this.currentBetIndex === this.bets.length - 1) {
+      this.plus.disableInteractive()
+      this.plus.setFrame(0)
+    }
+    // разблокируем кнопку уменьшения, если она была заблокирована ранее
+    if (this.currentBetIndex > 0) {
+      this.minus.setInteractive()
+      this.minus.setFrame(2)
+    }
+    this.updateCurrentBet()
+  }
+
+  decreseBet = () => {
+    if (this.currentBetIndex > 0) {
+      // проверяем, не достигли ли мы начала массива
+      this.currentBetIndex--
+      // делаем что-то с текущим элементом массива
+    }
+    // блокируем кнопку уменьшения, если достигли начала массива
+    if (this.currentBetIndex === 0) {
+      this.minus.disableInteractive()
+      this.minus.setFrame(0)
+    }
+    // разблокируем кнопку увеличения, если она была заблокирована ранее
+    if (this.currentBetIndex < this.bets.length - 1) {
+      this.plus.setInteractive()
+      this.plus.setFrame(2)
+    }
+    this.updateCurrentBet()
+  }
+
+  updateCurrentBet = () => {
+    this.currentBet.setText(this.bets[this.currentBetIndex] + ' ₸')
   }
 }
