@@ -23,7 +23,7 @@ const config = {
   scale: {
     parent: 'phaser-game',
     autoCenter: Phaser.Scale.CENTER_BOTH,
-    // mode: Phaser.Scale.FIT,
+    mode: Phaser.Scale.FIT,
     width: DEFAULT_WIDTH,
     height: DEFAULT_HEIGHT,
     fps: {

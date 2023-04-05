@@ -58,6 +58,7 @@ export default class Controller {
     }
     const callback = () => {
       this.sceneManager.stop('Modal')
+      console.log('wtf')
       this.sceneManager.scene.scale.updateScale()
       // window.onfocus = function () {
       //   window.location.reload()

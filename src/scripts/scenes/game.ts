@@ -83,7 +83,7 @@ export default class Game extends Phaser.Scene {
       radius: 18
     }
 
-    let maxCount = 100
+    let maxCount = 1
     let count = 0
     const interval = setInterval(() => {
       if (count === maxCount) {
@@ -112,6 +112,6 @@ export default class Game extends Phaser.Scene {
   createScene(rows) {}
 
   update(time: number, delta: number): void {
-      console.log(this.game.loop.actualFps)
+      // console.log(this.game.loop.actualFps)
   }
 }

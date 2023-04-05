@@ -1,1 +1,1 @@
-const url = 'rpo.logycom.kz:44313';
+const url = 'dev-games.sz.kz:44314';

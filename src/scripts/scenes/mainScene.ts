@@ -9,6 +9,7 @@ export default class MainScene extends Phaser.Scene {
   exitButton
   soundButton
   rulesButton
+  historyButton
   i18n: any
 
   constructor() {
@@ -26,12 +27,14 @@ export default class MainScene extends Phaser.Scene {
 
     // Add buttons
     this.exitButton = this.add.image(0, 60, 'exit-button').setOrigin(0);
-    this.exitButton.setX(width - this.exitButton.width - 65);
+    this.exitButton.setX(width - this.exitButton.width - 45);
 
-    this.rulesButton = this.add.image(65, 60, 'rules-button').setOrigin(0);
+    this.rulesButton = this.add.image(45, 60, 'rules-button').setOrigin(0);
 
-    this.soundButton = this.add.image(65, 170, 'sound-button').setOrigin(0);
+    this.soundButton = this.add.image(45, 180, 'sound-button').setOrigin(0);
 
+    this.historyButton = this.add.image(0, 180, 'history-button').setOrigin(0);
+    this.historyButton.setX(width - this.historyButton.width - 45);
     // //Add callbacks from controller
     // // @ts-ignore
     // this.scene.get('Bets').setCallback(this.controller.addBet)
