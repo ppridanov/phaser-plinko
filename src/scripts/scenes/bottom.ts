@@ -80,15 +80,25 @@ export default class Bottom extends Phaser.Scene {
 
       const sprite = this.add
         .image(0, 0, buttons[key].sprite)
+        .setFrame(1)
         .setOrigin(0)
         .setInteractive({ cursor: 'pointer' })
-        .on('pointerdown', buttons[key].onClicK)
 
       const text = this.add.text(0, 0, buttons[key].label, { font: `60px ${this.registry.get('font')}` })
       text.setX(sprite.width / 2 - text.width / 2).setY(32)
+      sprite
+        .on('pointerdown', () => {
+          buttons[key].onClicK()
+          sprite.setFrame(0)
+          text.setStyle({color: 'black', opacity: .7})
+        })
+        .on('pointerup', () => {
+          sprite.setFrame(1)
+          text.setStyle({color: 'white', opacity: 1})
+        })
 
       button.add([sprite, text])
-      let x = +key === 0 ? 30 : +key === 1 ? 377 : 700
+      let x = +key === 0 ? 30 : +key === 1 ? 365 : 700
       button.setX(x).setY(85)
       buttonContainer.add(button)
     }
@@ -129,8 +139,17 @@ export default class Bottom extends Phaser.Scene {
         this.increaseBet()
       })
 
-    this.autoButton = this.add.image(0, 0, 'auto-button').setFrame(0)
-
+    this.autoButton = this.add.image(0, 0, 'auto-button').setFrame(2).setOrigin(0)
+    this.autoButton
+      .setX(this.width - this.autoButton.width - 65)
+      .setInteractive({ cursor: 'pointer' })
+      .on('pointerdown', () => {
+        this.onChangeBetDown(this.autoButton)
+      })
+      .on('pointerup', () => {
+        this.onChangeBetUp(this.autoButton)
+      })
+      
     this.currentBet = this.add.text(
       0,
       0,
@@ -139,7 +158,7 @@ export default class Bottom extends Phaser.Scene {
     )
     this.currentBet.setX(betsBg.width / 2 - this.currentBet.width / 2).setY(55)
 
-    betContainer.add([betsBg, this.plus, this.minus, this.currentBet])
+    betContainer.add([betsBg, this.plus, this.minus, this.currentBet, this.autoButton])
     betContainer.setY(this.bottomBg.y + 215).setX(this.bottomBg.x + 41)
   }
 

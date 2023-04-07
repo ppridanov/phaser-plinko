@@ -59,9 +59,9 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.spritesheet('plus-button', 'assets/img/plus.png', { frameWidth: 154, frameHeight: 118 })
     this.load.spritesheet('minus-button', 'assets/img/minus.png', { frameWidth: 154, frameHeight: 118 })
     this.load.spritesheet('auto-button', 'assets/img/autoButton.png', { frameWidth: 229, frameHeight: 196 })
-    this.load.image('button-green', 'assets/img/green.png')
-    this.load.image('button-yellow', 'assets/img/yellow.png')
-    this.load.image('button-red', 'assets/img/red.png')
+    this.load.spritesheet('button-green', 'assets/img/green-button.png', { frameWidth: 352, frameHeight: 137 })
+    this.load.spritesheet('button-yellow', 'assets/img/yellow-button.png', { frameWidth: 352, frameHeight: 137 })
+    this.load.spritesheet('button-red', 'assets/img/red-button.png', { frameWidth: 352, frameHeight: 137 })
     this.load.image('rate-green', 'assets/img/rate-green.png')
     this.load.image('rate-yellow', 'assets/img/rate-yellow.png')
     this.load.image('rate-red', 'assets/img/rate-red.png')
@@ -169,7 +169,7 @@ export default class PreloadScene extends Phaser.Scene {
     this.container.add([this.bg, this.asteroids, clickText, clickTextSec])
     const timer = setInterval(() => {
       if (this.controller.ws.readyState === 1) {
-        this.scene.stop()
+        // this.scene.stop()
         clickText.setText(this.i18n.t('preload>first').toUpperCase())
         clickTextSec.setText(this.i18n.t('preload>second').toUpperCase())
         this.tweens.add({
