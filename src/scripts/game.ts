@@ -32,21 +32,10 @@ const config = {
     }
   },
   physics: {
-    default: 'matter',
-    matter: {
-        debug: {
-          showAxes: true,
-          showBounds: true,
-          showCollisions: true,
-          
-        },
-        enableSleeping: false,
-        gravity: {
-          y: .5
-        },
-        plugins: {
-            attractors: true
-        }
+    default: 'arcade',
+    arcade: {
+        // debug: true,
+        gravity: { y: 150 }
     }
   },
   plugins: {
