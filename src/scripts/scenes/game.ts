@@ -19,6 +19,7 @@ export default class Game extends Phaser.Scene {
     this.MIN_COLS = 3
     this.BALL_SIZE = 42
     this.SPACING = { x: 13, y: 4.5 }
+    console.log(this);
   }
 
   create() {
@@ -51,8 +52,8 @@ export default class Game extends Phaser.Scene {
       y: 200
     }
 
-    let maxCount = 100
-    let count = 0
+    let maxCount = 1
+    let count = 1
     const interval = setInterval(() => {
       console.log('update: ' + count)
       if (count === maxCount) {
