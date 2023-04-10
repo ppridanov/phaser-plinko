@@ -72,6 +72,11 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.image('pin', 'assets/img/pin.png')
     this.load.image('history-button', 'assets/img/history-icon.png')
     this.load.image('currents-bets-bg', 'assets/img/currents-bets-bg.png')
+    this.load.image("autoplay-bg", "assets/img/autoplay_bg.png");
+    this.load.image("autoplay-close", "assets/img/autoplay_close.png");
+    this.load.image("rounds-rect", "assets/img/rounds_rect.png");
+    this.load.spritesheet("autoplay-colors-btns", "assets/img/autoplay_colors_btns.png", {frameWidth: 337, frameHeight: 163});
+    this.load.spritesheet("round-btns", "assets/img/roundsButton.png", {frameWidth: 310, frameHeight: 129})
     // AUDIO
     // this.load.audio('button', 'assets/sounds/button.mp3')
     // this.load.audio('chipChange', 'assets/sounds/chips-change.mp3')
@@ -169,7 +174,7 @@ export default class PreloadScene extends Phaser.Scene {
     this.container.add([this.bg, this.asteroids, clickText, clickTextSec])
     const timer = setInterval(() => {
       if (this.controller.ws.readyState === 1) {
-        // this.scene.stop()
+        this.scene.stop()
         clickText.setText(this.i18n.t('preload>first').toUpperCase())
         clickTextSec.setText(this.i18n.t('preload>second').toUpperCase())
         this.tweens.add({
