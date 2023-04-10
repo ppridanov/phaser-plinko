@@ -11,6 +11,7 @@ export default class Game extends Phaser.Scene {
   width
   heigth
   pins
+  bounds
   constructor() {
     super({ key: 'Game' })
     this.gameWidth = 868
@@ -30,7 +31,7 @@ export default class Game extends Phaser.Scene {
     this.heigth = this.sys.canvas.height
 
     // physics
-    this.matter.world.update60Hz()
+    this.matter.world.update30Hz()
     // this.matter.world.setBounds();
     this.matter.world.setBounds(
       this.width / 2 - this.gameWidth / 2,
@@ -83,7 +84,7 @@ export default class Game extends Phaser.Scene {
       radius: 18
     }
 
-    let maxCount = 1
+    let maxCount = 100
     let count = 0
     const interval = setInterval(() => {
       if (count === maxCount) {
@@ -99,19 +100,18 @@ export default class Game extends Phaser.Scene {
       greenBall.setCollisionCategory(CATEGORY_BALL)
       greenBall.setCollidesWith(CATEGORY_PIN)
       greenBall.setName(`ball_${count}`)
-      
-      count++;
+
+      count++
       this.matter.world.add(greenBall)
     }, 500)
 
-    this.matter.world.on('collisionstart', (event, bodyA, bodyB) => {
-
-    })
+    this.matter.world.autoUpdate = false
   }
 
   createScene(rows) {}
 
   update(time: number, delta: number): void {
-      // console.log(this.game.loop.actualFps)
+    console.log(this.matter.world.getDelta())
+    this.matter.world.step(delta)
   }
 }

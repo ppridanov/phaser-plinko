@@ -34,20 +34,16 @@ const config = {
   physics: {
     default: 'matter',
     matter: {
-        debug: {
-          showAxes: true,
-          showBounds: true,
-          showCollisions: true,
-          
-        },
-        enableSleeping: false,
-        gravity: {
-          y: .5
-        },
-        plugins: {
-            attractors: true
-        }
-    }
+      enableSleeping: false,
+      debug: true,
+      gravityY: 0.0005,
+      setBounds: {
+        x: 0,
+        y: 0,
+        width: DEFAULT_WIDTH,
+        height: DEFAULT_HEIGHT,
+      },
+    },
   },
   plugins: {
     global: [
