@@ -76,7 +76,9 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.image("autoplay-close", "assets/img/autoplay_close.png");
     this.load.image("rounds-rect", "assets/img/rounds_rect.png");
     this.load.spritesheet("autoplay-colors-btns", "assets/img/autoplay_colors_btns.png", {frameWidth: 337, frameHeight: 163});
-    this.load.spritesheet("round-btns", "assets/img/roundsButton.png", {frameWidth: 310, frameHeight: 129})
+    this.load.spritesheet("round-btns", "assets/img/roundsButton.png", {frameWidth: 310, frameHeight: 129});
+    this.load.image("stop-round-rect", "assets/img/stopAutoplayRect.png");
+    this.load.spritesheet("button-accept", "assets/img/buttons_accept.png", {frameWidth: 983, frameHeight: 111});
     // AUDIO
     // this.load.audio('button', 'assets/sounds/button.mp3')
     // this.load.audio('chipChange', 'assets/sounds/chips-change.mp3')

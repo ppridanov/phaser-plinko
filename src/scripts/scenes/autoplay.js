@@ -1,6 +1,12 @@
+import ToggleSwitch from 'phaser3-rex-plugins/plugins/toggleswitch.js'
+
 export default class Autoplay extends Phaser.Scene {
   constructor() {
     super({ key: 'Autoplay' })
+  }
+
+  preload() { 
+    this.load.plugin('rextoggleswitchplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rextoggleswitchplugin.min.js', true);    
   }
 
   create() {
@@ -26,6 +32,9 @@ export default class Autoplay extends Phaser.Scene {
         sprite: 'round-btns',
         onClick: null
       },
+    ]
+
+    const rounds2 = [
       {
         label: '50',
         sprite: 'round-btns',
@@ -40,7 +49,7 @@ export default class Autoplay extends Phaser.Scene {
         label: '200',
         sprite: 'round-btns',
         onClick: null
-      }
+      },
     ]
 
     const autoplayHeader = {
@@ -94,13 +103,50 @@ export default class Autoplay extends Phaser.Scene {
     this.roundsBtns = this.add.container();
 
     rounds.forEach((round, index) => {
-        const x = 310 * index + 35;
+        const x = 310 * index + 25;
         const btn = this.createRoundsButton(x, 0, round.label, round.sprite, round.onClick, autoplayParagraph);
         this.roundsBtns.add(btn);
     });
 
+    rounds2.forEach((round, index) => {
+      const x = 310 * index + 25;
+      const btn = this.createRoundsButton(x, 130, round.label, round.sprite, round.onClick, autoplayParagraph);
+      this.roundsBtns.add(btn);
+  });
+
+
+    this.roundsBtns.setY(this.roundsRect.y + 45).setX(50);
+    this.roundsContainer.add(this.roundsRect);
     this.roundsContainer.add(this.roundsBtns);
     this.roundsContainer.add(this.roundsTitle);
+
+
+
+    // autostop
+    this.autostopContainer = this.add.container();
+    this.autostopRect = this.add.image(0,0, "stop-round-rect").setOrigin(0);
+
+    this.autostopText1 = this.add.text(0,0,"Остановиться, если денежных ", autoplayHeader);
+    this.autostopText1.setX(this.sys.canvas.width / 2 - this.autostopText1.width / 2 + 80).setY(this.roundsRect.y + 455);
+
+    this.autostopText2 = this.add.text(0,0,"средсв останеться меньше чем", autoplayHeader);
+    this.autostopText2.setX(this.sys.canvas.width / 2 - this.autostopText2.width / 2 + 85).setY(this.roundsRect.y + 510);
+
+    this.autostopRect.setX(this.sys.canvas.width / 2 - this.autostopRect.width / 2).setY(this.roundsRect.y + 395);
+
+    this.autostopContainer.add(this.autostopContainer);
+
+    // switch
+    this.switcher = this.add.rexToggleSwitch(this.sys.canvas.width / 2 - 360, this.autostopRect.y + 130, 150, 130, 0x6FDD00, {
+      trackHeight: 0.5,
+      trackWidth: 0.9,
+
+      thumbHeight: 0.4,
+      thumbWidth: 0.35,
+    });
+
+    this.buttonAccept = this.add.image(0,0,"button-accept").setOrigin(0).setFrame(1);
+    this.buttonAccept.setX(this.sys.canvas.width / 2 - this.buttonAccept.width / 2).setY(this.sys.canvas.height + 100).setInteractive({cursor: "pointer"});
   }
 
   createButton(x, y, label, sprite, onClick, color, styles) {
@@ -128,11 +174,18 @@ export default class Autoplay extends Phaser.Scene {
   createRoundsButton(x, y, label, sprite, onClick, styles) {
     const container = this.add.container()
 
-    const image = this.add.image(0, 0, sprite, 0).setOrigin(0).setInteractive({ cursor: 'pointer' })
+    const image = this.add.image(0, 0, sprite, 0).setOrigin(0).setInteractive({ cursor: 'pointer' }).setFrame(2);
+
+    image.on('pointerup', () => {
+      image.setFrame(2)
+    })
+
+    image.on('pointerdown', () => {
+      image.setFrame(1)
+    })
 
     const text = this.add.text(0, 0, label, styles).setOrigin(0)
-    // if (index =)
-    text.setY(image.height / 2 - text.height / 2 - 10).setX(image.width - text.width - 50)
+    text.setY(image.height / 2 - text.height / 2 - 10).setX(image.width / 2 - text.width / 2);
 
     container.add([image, text]).setX(x).setY(y)
 
