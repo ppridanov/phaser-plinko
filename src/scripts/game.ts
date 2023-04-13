@@ -13,6 +13,7 @@ import Control from './scenes/contor'
 import Header from './scenes/header'
 import Bottom from './scenes/bottom'
 import Game from './scenes/game'
+import Autoplay from './scenes/autoplay'
 import PhaserMatterCollisionPlugin from 'phaser-matter-collision-plugin'
 
 const DEFAULT_WIDTH = 1080
@@ -24,7 +25,7 @@ const config = {
   scale: {
     parent: 'phaser-game',
     autoCenter: Phaser.Scale.CENTER_BOTH,
-    // mode: Phaser.Scale.FIT,
+    mode: Phaser.Scale.FIT,
     width: DEFAULT_WIDTH,
     height: DEFAULT_HEIGHT,
     timeScale: 10,
@@ -71,7 +72,7 @@ const config = {
       }
     ]
   },
-  scene: [PreloadScene, MainScene, Control, Header, Game, Bottom, BottomBar, ConnectingScene, RulesScene, Register]
+  scene: [PreloadScene, MainScene, Control, Header, Game, Bottom, BottomBar, ConnectingScene, RulesScene, Register, Autoplay]
 }
 
 window.addEventListener('load', () => {
