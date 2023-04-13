@@ -10,6 +10,10 @@ export default class Autoplay extends Phaser.Scene {
   }
 
   create() {
+    const roundsWidth = 310;
+    const roundsMargin = 25;
+    const secondsRowMargin = 130;
+
     const buttons = [
       { label: 'Зеленый', sprite: 'autoplay-colors-btns', onClick: null, color: 0x4dc900 },
       { label: 'Желтый', sprite: 'autoplay-colors-btns', onClick: null, color: 0xffe600 },
@@ -103,14 +107,14 @@ export default class Autoplay extends Phaser.Scene {
     this.roundsBtns = this.add.container();
 
     rounds.forEach((round, index) => {
-        const x = 310 * index + 25;
+        const x = roundsWidth * index + roundsMargin;
         const btn = this.createRoundsButton(x, 0, round.label, round.sprite, round.onClick, autoplayParagraph);
         this.roundsBtns.add(btn);
     });
 
     rounds2.forEach((round, index) => {
-      const x = 310 * index + 25;
-      const btn = this.createRoundsButton(x, 130, round.label, round.sprite, round.onClick, autoplayParagraph);
+      const x = roundsWidth * index + roundsMargin;
+      const btn = this.createRoundsButton(x, secondsRowMargin, round.label, round.sprite, round.onClick, autoplayParagraph);
       this.roundsBtns.add(btn);
   });
 
