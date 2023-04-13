@@ -169,7 +169,7 @@ export default class PreloadScene extends Phaser.Scene {
     this.container.add([this.bg, this.asteroids, clickText, clickTextSec])
     const timer = setInterval(() => {
       if (this.controller.ws.readyState === 1) {
-        // this.scene.stop()
+        this.scene.stop()
         clickText.setText(this.i18n.t('preload>first').toUpperCase())
         clickTextSec.setText(this.i18n.t('preload>second').toUpperCase())
         this.tweens.add({

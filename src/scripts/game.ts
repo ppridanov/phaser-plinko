@@ -13,6 +13,7 @@ import Control from './scenes/contor'
 import Header from './scenes/header'
 import Bottom from './scenes/bottom'
 import Game from './scenes/game'
+import PhaserMatterCollisionPlugin from 'phaser-matter-collision-plugin'
 
 const DEFAULT_WIDTH = 1080
 const DEFAULT_HEIGHT = 1920
@@ -23,19 +24,20 @@ const config = {
   scale: {
     parent: 'phaser-game',
     autoCenter: Phaser.Scale.CENTER_BOTH,
-    mode: Phaser.Scale.FIT,
+    // mode: Phaser.Scale.FIT,
     width: DEFAULT_WIDTH,
     height: DEFAULT_HEIGHT,
+    timeScale: 10,
     fps: {
       target: 30,
       forceSetTimeOut: true
     }
   },
   physics: {
-    default: 'arcade',
-    arcade: {
-        // debug: true,
-        gravity: { y: 150 }
+    default: 'matter',
+    matter: {
+        debug: true,
+        gravity: { y: 1 }
     }
   },
   plugins: {
@@ -61,6 +63,11 @@ const config = {
         key: 'i18nPlugin',
         plugin: I18nPlugin,
         mapping: 'i18n'
+      },
+      {
+        plugin: PhaserMatterCollisionPlugin, // The plugin class
+        key: "matterCollision", // Where to store in Scene.Systems, e.g. scene.sys.matterCollision
+        mapping: "matterCollision" // Where to store in the Scene, e.g. scene.matterCollision
       }
     ]
   },

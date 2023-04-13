@@ -19,17 +19,37 @@ export default class Game extends Phaser.Scene {
     this.MIN_COLS = 3
     this.BALL_SIZE = 42
     this.SPACING = { x: 13, y: 4.5 }
-    console.log(this);
+    this.pins = []
   }
 
   create() {
+    const CATEGORY_BALL = this.matter.world.nextCategory()
+    const CATEGORY_PIN = this.matter.world.nextCategory()
     // sizes
-    this.pins = this.physics.add.staticGroup()
     this.width = this.sys.canvas.width
     this.heigth = this.sys.canvas.height
-    this.physics.world.gravity.y = 1
-    const directions = [[1, 1, 0, 1, 0]]
-    this.physics.world.setBounds(0, 0, this.gameWidth, this.gameHeigth, true, true, false, true)
+
+    // physics
+    this.matter.world.update60Hz()
+    // this.matter.world.setBounds();
+    this.matter.world.setBounds(
+      this.width / 2 - this.gameWidth / 2,
+      380,
+      this.gameWidth,
+      this.gameHeigth,
+      1,
+      true,
+      true,
+      false,
+      true
+    )
+
+    this.matter.world.setGravity(0, 1)
+
+    this.ufo = this.add.image(0, 0, 'spacesheep').setOrigin(0)
+    this.ufo.setX(this.width / 2 - this.ufo.width / 2).setY(239)
+    console.log(this.BALL_SIZE)
+    this.pins = this.add.container()
     for (let row = 0; row < this.ROWS; row++) {
       const colsCount = row + this.MIN_COLS
       for (let col = 0; col < colsCount; col++) {
@@ -40,77 +60,74 @@ export default class Game extends Phaser.Scene {
 
         const y = (this.BALL_SIZE + this.SPACING.y) * row + 390
 
-        const pin = this.physics.add.staticImage(x, y, 'pin').setCircle(9)
-        //@ts-ignore
-        pin.id = row
+        const pin = this.matter.add.image(x, y, 'pin')
+        pin.setRectangle(11, 11)
+        pin.setStatic(true)
+        pin.setBounce(0)
+        pin.setCollisionCategory(CATEGORY_PIN)
+        pin.setName(String(row + 1))
+        console.log(pin.width)
         this.pins.add(pin)
       }
     }
 
+    // const greenBall = this.matter.add.image(560, -500, 'ball-green').setOrigin(0).setCircle(18)
+    // this.matter.world.add(greenBall)
     const initialSettings = {
-      x: Phaser.Math.Between(400, 600),
-      y: 200
+      x: 540,
+      y: 0,
+      velocityX: 0,
+      velocityY: 0,
+      mass: 1,
+      friction: 0.1,
+      restitution: 0.4,
+      radius: 18
     }
+
+    const direction = [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1]
 
     let maxCount = 1
     let count = 1
     const interval = setInterval(() => {
-      console.log('update: ' + count)
       if (count === maxCount) {
         clearInterval(interval)
       }
-      const greenBall = this.physics.add.image(541, initialSettings.y, 'ball-green')
-      const direction = directions[Phaser.Math.Between(0, directions.length - 1)]
-      greenBall
-        .setGravityY(300)
-        .setBounce(0.1)
-        .setFriction(0)
-        .setMass(1)
-        .setCircle(20)
-        .setName(`ball_${count}`)
-        .setScale(0.8)
-      greenBall.setVelocity(0.1)
-      //@ts-ignore
-      let isRow = null
+      const greenBall = this.matter.add.image(initialSettings.x, initialSettings.y, 'ball-green')
+      greenBall.setCircle(initialSettings.radius)
+      greenBall.setVelocity(initialSettings.velocityX, initialSettings.velocityY)
+      greenBall.setMass(initialSettings.mass)
+      greenBall.setFriction(1)
+      // greenBall.setBounce(initialSettings.restitution)
+      greenBall.setCollisionCategory(CATEGORY_BALL)
+      greenBall.setCollidesWith(CATEGORY_PIN)
+      greenBall.setName(`ball_${count}`)
+      let isRow = -1
+      let isWTF = null
       count++
-      let isAnimate = false
-      this.physics.add.collider(
-        greenBall,
-        this.pins,
-        (ball, pin) => {
-          //@ts-ignore
-          const pinId = pin.id
-          ball.body.velocity.y = 0
-          ball.body.velocity.x = 0
-          greenBall.setFriction(999)
-          const dir = direction[pinId]
-          //@ts-ignore
-          console.log(pinId, isRow)
-          //@ts-ignore
-          if (!isRow || isRow !== pinId) {
-            if (!isAnimate) {
-              isAnimate = true
-              this.tweens.add({
-                targets: greenBall,
-                y: pin.body.y,
-                x: dir === 1 ? pin.body.x + pin.body.width + 18 : pin.body.x - 18,
-                ease: Phaser.Math.Easing.Linear,
-                duration: 300,
-                onComplete: () => {
-                  isAnimate = false
-                }
-              })
-            }
+      this.matter.world.add(greenBall)
+      // @ts-ignore
+      this.matterCollision.addOnCollideStart({
+        objectA: greenBall,
+        callback: event => {
+          const dir = +event.bodyB.gameObject.name
+          greenBall.setVelocity(0)
+          greenBall.setVelocityY(200)
 
-            //@ts-ignore
-            isRow = pinId
+          if (isRow !== dir || dir < dir - 1) {
+            // console.log(isRow, dir)
+            // if (direction[dir] === 1) {
+            //   greenBall.setVelocityX(3)
+            //   greenBall.setVelocityY(2)
+            // } else if (direction[dir] === 0) {
+            //   greenBall.setVelocityX(-3)
+            //   greenBall.setVelocityY(2)
+            // }
           }
+          isRow = dir
         },
-        () => {},
-        this
-      )
-      this.cameras.main.setBounds(0, 0, this.gameWidth, this.gameHeigth)
-    }, 800)
+        context: this
+      })
+    }, 500)
   }
 
   createScene(rows) {}
