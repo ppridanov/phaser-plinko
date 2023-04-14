@@ -59,7 +59,9 @@ export default class Autoplay extends Phaser.Scene {
 
     const autoplayParagraph = { font: `42px ${this.registry.get('font')}`, color: 'white' }
 
-    this.autoplayBg = this.add.image(0, 0, 'autoplay-bg').setOrigin(0)
+    this.autoplayBg = this.add.image(0, 0, 'autoplay-bg').setOrigin(0).setInteractive().on("pointerdown", () => {
+      return;
+    })
     this.autoplayBg.setY(this.sys.canvas.height - this.autoplayBg.height)
 
     this.close = this.add.image(0, 0, 'autoplay-close').setOrigin(0)
@@ -67,6 +69,9 @@ export default class Autoplay extends Phaser.Scene {
       .setX(this.sys.canvas.width - this.close.width - 60)
       .setY(this.autoplayBg.y + 40)
       .setInteractive({ cursor: 'pointer' })
+      .on('pointerdown', () => {
+        this.scene.stop();
+      })
 
     this.title = this.add
       .text(0, 0, 'Авто-режим', { font: `63px ${this.registry.get('font')}`, color: 'white' })

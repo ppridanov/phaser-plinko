@@ -145,6 +145,7 @@ export default class Bottom extends Phaser.Scene {
       .setInteractive({ cursor: 'pointer' })
       .on('pointerdown', () => {
         this.onChangeBetDown(this.autoButton)
+        this.scene.launch("Autoplay")
       })
       .on('pointerup', () => {
         this.onChangeBetUp(this.autoButton)

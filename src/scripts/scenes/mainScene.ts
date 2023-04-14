@@ -59,7 +59,6 @@ export default class MainScene extends Phaser.Scene {
     this.scene.launch('Bottom')
     this.scene.launch('Control')
     this.scene.launch('Game')
-    this.scene.launch("Autoplay")
 
     // this.scene.launch('BottomBar');
     // this.scene.launch('PreviousBets');
