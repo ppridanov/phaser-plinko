@@ -10,9 +10,20 @@ export default class Autoplay extends Phaser.Scene {
   }
 
   create() {
-    const roundsWidth = 310;
-    const roundsMargin = 25;
-    const secondsRowMargin = 130;
+    const ROUNDS_WIDTH = 310;
+    const ROUNDS_MARGIN = 25;
+    const SECOND_ROW_Y = 130;
+    const AUTOSTOP_RECT_Y = 395;
+    const FIRST_STRING_Y = 455;
+    const SECOND_STRING_Y = 510;
+    const SWITCHER_Y = 130;
+    const SWITCHER_X = 360;
+    const ROUNDS_BTNS_X = 50;
+    const ROUNDS_RECT_Y = 115;
+    const PICK_TITLE_Y = 250;
+    const COLOR_BTNS_Y = 324;
+    const COLOR_BTN_WIDTH = 337;
+    const COLOR_BTN_MARGIN = 35;
 
     const buttons = [
       { label: 'Зеленый', sprite: 'autoplay-colors-btns', onClick: null, color: 0x4dc900 },
@@ -61,7 +72,10 @@ export default class Autoplay extends Phaser.Scene {
       color: 'white'
     }
 
-    const autoplayParagraph = { font: `42px ${this.registry.get('font')}`, color: 'white' }
+    const autoplayParagraph = { 
+      font: `42px ${this.registry.get('font')}`, 
+      color: 'white' 
+    }
 
     this.autoplayBg = this.add.image(0, 0, 'autoplay-bg').setOrigin(0)
     this.autoplayBg.setY(this.sys.canvas.height - this.autoplayBg.height)
@@ -79,16 +93,16 @@ export default class Autoplay extends Phaser.Scene {
 
     this.pickContainer = this.add.container()
     this.pickTitle = this.add.text(0, 0, 'Выберите цвета', autoplayHeader).setOrigin(0)
-    this.pickTitle.setX(this.sys.canvas.width / 2 - this.pickTitle.width / 2).setY(this.autoplayBg.y + 250)
+    this.pickTitle.setX(this.sys.canvas.width / 2 - this.pickTitle.width / 2).setY(this.autoplayBg.y + PICK_TITLE_Y)
 
     this.buttons = this.add.container()
 
     buttons.forEach((button, index) => {
-      const x = 337 * index + 35
+      const x = COLOR_BTN_WIDTH * index + COLOR_BTN_MARGIN
       const btn = this.createButton(x, 0, button.label, button.sprite, button.onClick, button.color, autoplayParagraph)
       this.buttons.add(btn)
     })
-    this.buttons.setY(this.autoplayBg.y + 324)
+    this.buttons.setY(this.autoplayBg.y + COLOR_BTNS_Y)
 
     this.pickContainer.add(this.pickTitle)
     this.pickContainer.add(this.buttons)
@@ -102,24 +116,24 @@ export default class Autoplay extends Phaser.Scene {
     this.roundsRect = this.add.image(0, 0, 'rounds-rect').setOrigin(0)
     this.roundsRect
       .setX(this.sys.canvas.width / 2 - this.roundsRect.width / 2)
-      .setY(this.autoplayBg.y + this.roundsTitle.y - 115)
+      .setY(this.autoplayBg.y + this.roundsTitle.y - ROUNDS_RECT_Y)
     
     this.roundsBtns = this.add.container();
 
     rounds.forEach((round, index) => {
-        const x = roundsWidth * index + roundsMargin;
+        const x = ROUNDS_WIDTH * index + ROUNDS_MARGIN;
         const btn = this.createRoundsButton(x, 0, round.label, round.sprite, round.onClick, autoplayParagraph);
         this.roundsBtns.add(btn);
     });
 
     rounds2.forEach((round, index) => {
-      const x = roundsWidth * index + roundsMargin;
-      const btn = this.createRoundsButton(x, secondsRowMargin, round.label, round.sprite, round.onClick, autoplayParagraph);
+      const x = ROUNDS_WIDTH * index + ROUNDS_MARGIN;
+      const btn = this.createRoundsButton(x, SECOND_ROW_Y, round.label, round.sprite, round.onClick, autoplayParagraph);
       this.roundsBtns.add(btn);
   });
 
 
-    this.roundsBtns.setY(this.roundsRect.y + 45).setX(50);
+    this.roundsBtns.setY(this.roundsRect.y + 45).setX(ROUNDS_BTNS_X);
     this.roundsContainer.add(this.roundsRect);
     this.roundsContainer.add(this.roundsBtns);
     this.roundsContainer.add(this.roundsTitle);
@@ -131,17 +145,17 @@ export default class Autoplay extends Phaser.Scene {
     this.autostopRect = this.add.image(0,0, "stop-round-rect").setOrigin(0);
 
     this.autostopText1 = this.add.text(0,0,"Остановиться, если денежных ", autoplayHeader);
-    this.autostopText1.setX(this.sys.canvas.width / 2 - this.autostopText1.width / 2 + 80).setY(this.roundsRect.y + 455);
+    this.autostopText1.setX(this.sys.canvas.width / 2 - this.autostopText1.width / 2 + 80).setY(this.roundsRect.y + FIRST_STRING_Y);
 
     this.autostopText2 = this.add.text(0,0,"средсв останеться меньше чем", autoplayHeader);
-    this.autostopText2.setX(this.sys.canvas.width / 2 - this.autostopText2.width / 2 + 85).setY(this.roundsRect.y + 510);
+    this.autostopText2.setX(this.sys.canvas.width / 2 - this.autostopText2.width / 2 + 85).setY(this.roundsRect.y + SECOND_STRING_Y);
 
-    this.autostopRect.setX(this.sys.canvas.width / 2 - this.autostopRect.width / 2).setY(this.roundsRect.y + 395);
+    this.autostopRect.setX(this.sys.canvas.width / 2 - this.autostopRect.width / 2).setY(this.roundsRect.y + AUTOSTOP_RECT_Y);
 
     this.autostopContainer.add(this.autostopContainer);
 
     // switch
-    this.switcher = this.add.rexToggleSwitch(this.sys.canvas.width / 2 - 360, this.autostopRect.y + 130, 150, 130, 0x6FDD00, {
+    this.switcher = this.add.rexToggleSwitch(this.sys.canvas.width / 2 - SWITCHER_X, this.autostopRect.y + SWITCHER_Y, 150, 130, 0x6FDD00, {
       trackHeight: 0.5,
       trackWidth: 0.9,
 
