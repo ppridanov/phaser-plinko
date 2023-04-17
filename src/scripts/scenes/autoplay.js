@@ -18,7 +18,7 @@ export default class Autoplay extends Phaser.Scene {
     const ROUNDS_MARGIN = 25
     const SECOND_ROW_Y = 130
     const AUTOSTOP_RECT_Y = 395
-    const FIRST_STRING_Y = 455
+    const AUTOPLAY_TITLES_Y = 455
     const SECOND_STRING_Y = 510
     const SWITCHER_Y = 130
     const SWITCHER_X = 360
@@ -200,7 +200,7 @@ export default class Autoplay extends Phaser.Scene {
 
     this.autoplayTitles = this.add.text(0,0, "Остановиться, если денежных средсв останеться меньше чем", autoplayRoundsTitleStyles);
 
-    this.autoplayTitles.setX(this.CANVAS_WIDTH / 2 - this.autoplayTitles.width / 2 + AUTOPLAY_TITLES_X).setY( this.roundsRect.y + FIRST_STRING_Y)
+    this.autoplayTitles.setX(this.CANVAS_WIDTH / 2 - this.autoplayTitles.width / 2 + AUTOPLAY_TITLES_X).setY( this.roundsRect.y + AUTOPLAY_TITLES_Y)
 
     this.autostopContainer.add(this.autoplayTitles)
 
@@ -217,15 +217,10 @@ export default class Autoplay extends Phaser.Scene {
 
         thumbHeight: 0.4,
         thumbWidth: 0.35,
-        click: {
-          mode: 1
-        }
       }
     )
 
     this.switcher.input.cursor = "pointer";
-
-    this.switcher.setInteractive({ cursor: 'pointer' })
 
     this.autostopContainer.add(this.switcher)
 
