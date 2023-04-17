@@ -28,6 +28,7 @@ export default class Autoplay extends Phaser.Scene {
     const COLOR_BTNS_Y = 324
     const COLOR_BTN_WIDTH = 337
     const COLOR_BTN_MARGIN = 35
+    const AUTOPLAY_TITLES_X = 80
 
     this.CANVAS_WIDTH = this.sys.canvas.width
     this.CANVAS_HEIGHT = this.sys.canvas.height
@@ -85,20 +86,18 @@ export default class Autoplay extends Phaser.Scene {
       color: 'white'
     }
 
-    const autoplayTitles = [
-      {
-        xMargin: 80,
-        yMargin: FIRST_STRING_Y,
-        label: 'Остановиться, если денежных ',
-        styles: autoplayHeaderStyles
-      },
-      {
-        xMargin: 85,
-        yMargin: SECOND_STRING_Y,
-        label: 'средсв останеться меньше чем',
-        styles: autoplayHeaderStyles
+    const autoplayRoundsTitleStyles = {
+      font: `42px ${this.registry.get('font')}`,
+      wordWrap: {
+        width: 800, 
+        useAdvancedWrap: true, 
+        align: "left"
       }
-    ]
+    }
+
+    this.autoplayAllContainer = this.add.container();
+
+    this.headerContainer = this.add.container();
 
     this.autoplayBg = this.add.image(0, 0, 'autoplay-bg').setOrigin(0).setAlpha(1);
     this.autoplayBg.setY(this.sys.canvas.height - this.autoplayBg.height)
@@ -109,15 +108,15 @@ export default class Autoplay extends Phaser.Scene {
       .setY(this.autoplayBg.y + 40)
       .setInteractive({ cursor: 'pointer' })
 
-    this.close.on('click', () => {
+    this.close.on('pointerdown', () => {
       console.log("wtf")
-      this.tweens.add({ target: this.close,
+      this.tweens.add({ 
+        targets: this.autoplayAllContainer,
         x: 0, 
-        y: 0, 
-        alpha: 1, 
-        duration: 300, 
+        y: this.sys.canvas.height, 
+        alpha: 0, 
+        duration: 500, 
         onComplete: () => {
-          this.autoplayBg.setAlpha(0);
           this.scene.stop(this);
         }
       })
@@ -127,6 +126,10 @@ export default class Autoplay extends Phaser.Scene {
       .text(0, 0, 'Авто-режим', { font: `63px ${this.registry.get('font')}`, color: 'white' })
       .setOrigin(0)
     this.title.setX(this.sys.canvas.width / 2 - this.title.width / 2).setY(this.autoplayBg.y + 40)
+
+    this.headerContainer.add(this.autoplayBg);
+    this.headerContainer.add(this.close);
+    this.headerContainer.add(this.title);
 
     this.pickContainer = this.add.container()
     this.pickTitle = this.add.text(0, 0, 'Выберите цвета', autoplayHeaderStyles).setOrigin(0)
@@ -195,10 +198,11 @@ export default class Autoplay extends Phaser.Scene {
       .setY(this.roundsRect.y + AUTOSTOP_RECT_Y)
     this.autostopContainer.add(this.autostopRect)
 
-    autoplayTitles.forEach(item => {
-      const text = this.setAutostopText(item.xMargin, item.yMargin, item.label, item.styles)
-      this.autostopContainer.add(text)
-    })
+    this.autoplayTitles = this.add.text(0,0, "Остановиться, если денежных средсв останеться меньше чем", autoplayRoundsTitleStyles);
+
+    this.autoplayTitles.setX(this.CANVAS_WIDTH / 2 - this.autoplayTitles.width / 2 + AUTOPLAY_TITLES_X).setY( this.roundsRect.y + FIRST_STRING_Y)
+
+    this.autostopContainer.add(this.autoplayTitles)
 
     // switch
     this.switcher = this.add.rexToggleSwitch(
@@ -219,13 +223,22 @@ export default class Autoplay extends Phaser.Scene {
       }
     )
 
+    this.switcher.input.cursor = "pointer";
+
     this.switcher.setInteractive({ cursor: 'pointer' })
+
+    this.autostopContainer.add(this.switcher)
 
     this.buttonAccept = this.add.image(0, 0, 'button-accept').setOrigin(0).setFrame(1)
     this.buttonAccept
       .setX(this.sys.canvas.width / 2 - this.buttonAccept.width / 2)
       .setY(this.sys.canvas.height + 100)
       .setInteractive({ cursor: 'pointer' })
+    
+    this.autoplayAllContainer.add(this.headerContainer);
+    this.autoplayAllContainer.add(this.autostopContainer);
+    this.autoplayAllContainer.add(this.roundsContainer);
+    this.autoplayAllContainer.add(this.pickContainer)
   }
 
   createButton(x, y, label, sprite, onClick, color, styles) {
@@ -274,11 +287,7 @@ export default class Autoplay extends Phaser.Scene {
   setAutostopText(xMargin, yMargin, label, styles) {
     const container = this.add.container()
     const title = this.add.text(0, 0, label, styles)
-    const x = this.CANVAS_WIDTH / 2 - title.width / 2 + xMargin
-    const y = this.roundsRect.y + yMargin
-    container.add(title)
 
-    container.setX(x).setY(y)
 
     return container
   }
