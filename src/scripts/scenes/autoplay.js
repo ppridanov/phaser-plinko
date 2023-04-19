@@ -89,8 +89,8 @@ export default class Autoplay extends Phaser.Scene {
     const autoplayRoundsTitleStyles = {
       font: `42px ${this.registry.get('font')}`,
       wordWrap: {
-        width: 800,
-        useAdvancedWrap: true,
+        width: 800, 
+        useAdvancedWrap: true, 
         align: "left"
       }
     }
@@ -110,12 +110,12 @@ export default class Autoplay extends Phaser.Scene {
 
     this.close.on('pointerdown', () => {
       console.log("wtf")
-      this.tweens.add({
+      this.tweens.add({ 
         targets: this.autoplayAllContainer,
-        x: 0,
-        y: this.sys.canvas.height,
-        alpha: 0,
-        duration: 500,
+        x: 0, 
+        y: this.sys.canvas.height, 
+        alpha: 0, 
+        duration: 500, 
         onComplete: () => {
           this.scene.stop(this);
         }
@@ -150,7 +150,7 @@ export default class Autoplay extends Phaser.Scene {
       )
       this.buttons.add(btn)
     })
-    this.buttons.setY(this.autoplayBg.y + 324)
+    this.buttons.setY(this.autoplayBg.y + COLOR_BTNS_Y)
 
     this.pickContainer.add(this.pickTitle)
     this.pickContainer.add(this.buttons)
@@ -198,9 +198,9 @@ export default class Autoplay extends Phaser.Scene {
       .setY(this.roundsRect.y + AUTOSTOP_RECT_Y)
     this.autostopContainer.add(this.autostopRect)
 
-    this.autoplayTitles = this.add.text(0, 0, "Остановиться, если денежных средсв останеться меньше чем", autoplayRoundsTitleStyles);
+    this.autoplayTitles = this.add.text(0,0, "Остановиться, если денежных средсв останеться меньше чем", autoplayRoundsTitleStyles);
 
-    this.autoplayTitles.setX(this.CANVAS_WIDTH / 2 - this.autoplayTitles.width / 2 + AUTOPLAY_TITLES_X).setY(this.roundsRect.y + AUTOPLAY_TITLES_Y)
+    this.autoplayTitles.setX(this.CANVAS_WIDTH / 2 - this.autoplayTitles.width / 2 + AUTOPLAY_TITLES_X).setY( this.roundsRect.y + AUTOPLAY_TITLES_Y)
 
     this.autostopContainer.add(this.autoplayTitles)
 
@@ -229,10 +229,11 @@ export default class Autoplay extends Phaser.Scene {
       .setX(this.sys.canvas.width / 2 - this.buttonAccept.width / 2)
       .setY(this.sys.canvas.height + 100)
       .setInteractive({ cursor: 'pointer' })
-
-    this.createCurrentBets()
-
-    this.autoplayAllContainer.add([this.headerContainer, this.autostopContainer, this.roundsContainer, this.pickContainer]);
+    
+    this.autoplayAllContainer.add(this.headerContainer);
+    this.autoplayAllContainer.add(this.autostopContainer);
+    this.autoplayAllContainer.add(this.roundsContainer);
+    this.autoplayAllContainer.add(this.pickContainer)
   }
 
   createButton(x, y, label, sprite, onClick, color, styles) {
@@ -278,54 +279,11 @@ export default class Autoplay extends Phaser.Scene {
     return container
   }
 
-  createCurrentBets() {
-    //bets
-    const betContainer = this.add.container()
-    const betsBg = this.add.image(0, 0, 'currents-bets-bg').setOrigin(0)
+  setAutostopText(xMargin, yMargin, label, styles) {
+    const container = this.add.container()
+    const title = this.add.text(0, 0, label, styles)
 
-    this.minus = this.add.image(0, 0, 'minus-button').setFrame(0).setOrigin(0)
-    this.minus.setX(32).setY(44)
-    this.minus
-      .setInteractive({ cursor: 'pointer' })
-      .on('pointerdown', () => {
-        this.onChangeBetDown(this.minus)
-      })
-      .on('pointerup', () => {
-        this.onChangeBetUp(this.minus)
-      })
 
-    this.plus = this.add.image(0, 0, 'plus-button').setFrame(2).setOrigin(0)
-    this.plus
-      .setX(betsBg.width - this.plus.width - 25)
-      .setY(44)
-      .setInteractive({ cursor: 'pointer' })
-      .on('pointerdown', () => {
-        this.onChangeBetDown(this.plus)
-      })
-      .on('pointerup', () => {
-        this.onChangeBetUp(this.plus)
-      })
-
-    this.currentBet = this.add.text(
-      0,
-      0,
-      0 + ' ₸',
-      Object.assign({
-        font: `48px ${this.registry.get('font')}`,
-        color: 'white'
-      }, { font: `62px ${this.registry.get('font')}` })
-    )
-    this.currentBet.setX(betsBg.width / 2 - this.currentBet.width / 2).setY(55)
-
-    betContainer.add([betsBg, this.plus, this.minus, this.currentBet])
-    betContainer.setY(this.sys.canvas.height - 500).setX(this.sys.canvas.width / 2 - betsBg.width / 2);
-  }
-
-  onChangeBetDown = target => {
-    target.setFrame(1)
-  }
-
-  onChangeBetUp = target => {
-    target.setFrame(2)
+    return container
   }
 }
