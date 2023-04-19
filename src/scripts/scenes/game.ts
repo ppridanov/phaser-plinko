@@ -84,7 +84,7 @@ export default class Game extends Phaser.Scene {
         const y = (this.BALL_SIZE + this.SPACING.y) * row + 390
 
         const pin = this.matter.add.image(x, y, 'pin')
-        pin.setRectangle(11, 11)
+        pin.setCircle(5)
         pin.setStatic(true)
         pin.setBounce(0)
         pin.setCollisionCategory(CATEGORY_PIN)
@@ -106,7 +106,7 @@ export default class Game extends Phaser.Scene {
       greenBall.setVelocity(this.initialBallSettings.velocityX, this.initialBallSettings.velocityY)
       greenBall.setMass(this.initialBallSettings.mass)
       greenBall.setFriction(1)
-      // greenBall.setBounce(initialSettings.restitution)
+      greenBall.setBounce(this.initialBallSettings.restitution)
       greenBall.setCollisionCategory(CATEGORY_BALL)
       greenBall.setCollidesWith(CATEGORY_PIN)
       greenBall.setName(`ball_${count}`)
@@ -118,14 +118,17 @@ export default class Game extends Phaser.Scene {
       this.matterCollision.addOnCollideStart({
         objectA: greenBall,
         callback: event => {
+          console.log(greenBall.body.velocity)
           const dir = +event.bodyB.gameObject.name
-          greenBall.setVelocity(0)
+          // greenBall.setVelocity(0)
           if (isRow !== dir || dir < dir - 1) {
-            console.log(isRow, dir)
             if (this.testDirection[dir] === 1) {
-              greenBall.setVelocityX(1)
+              const vec = new Phaser.Math.Vector2(2, 1);
+              greenBall.applyForce(vec)
             } else if (this.testDirection[dir] === 0) {
-              greenBall.setVelocityX(-1)
+              const vec = new Phaser.Math.Vector2(-2, 1);
+
+              greenBall.applyForce(vec)
             }
           }
           isRow = dir

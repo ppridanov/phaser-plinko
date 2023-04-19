@@ -28,7 +28,7 @@ module.exports = {
     }
   },
   plugins: [
-    new HtmlWebpackPlugin({ gameName: 'Bongo12', template: 'src/index.html', inject: true }),
+    new HtmlWebpackPlugin({ gameName: 'Plinko', template: 'src/index.html', inject: true }),
     new CopyWebpackPlugin({
       patterns: [
         { from: 'src/assets', to: 'assets' },

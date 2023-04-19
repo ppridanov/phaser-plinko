@@ -73,35 +73,37 @@ export default class Bottom extends Phaser.Scene {
       { label: 'красный', sprite: 'button-red', onClicK: () => console.log('wtf') }
     ]
 
+    const button = document.createElement('button');
     const buttonContainer = this.add.container()
+    const domButton = this.add.dom(0, 0, button)
+    buttonContainer.add(domButton)
+    // for (let key in buttons) {
+    //   const button = this.add.container()
 
-    for (let key in buttons) {
-      const button = this.add.container()
+    //   const sprite = this.add
+    //     .image(0, 0, buttons[key].sprite)
+    //     .setFrame(1)
+    //     .setOrigin(0)
+    //     .setInteractive({ cursor: 'pointer' })
 
-      const sprite = this.add
-        .image(0, 0, buttons[key].sprite)
-        .setFrame(1)
-        .setOrigin(0)
-        .setInteractive({ cursor: 'pointer' })
+    //   const text = this.add.text(0, 0, buttons[key].label, { font: `60px ${this.registry.get('font')}` })
+    //   text.setX(sprite.width / 2 - text.width / 2).setY(32)
+    //   sprite
+    //     .on('pointerdown', () => {
+    //       buttons[key].onClicK()
+    //       sprite.setFrame(0)
+    //       text.setStyle({color: 'black', opacity: .7})
+    //     })
+    //     .on('pointerup', () => {
+    //       sprite.setFrame(1)
+    //       text.setStyle({color: 'white', opacity: 1})
+    //     })
 
-      const text = this.add.text(0, 0, buttons[key].label, { font: `60px ${this.registry.get('font')}` })
-      text.setX(sprite.width / 2 - text.width / 2).setY(32)
-      sprite
-        .on('pointerdown', () => {
-          buttons[key].onClicK()
-          sprite.setFrame(0)
-          text.setStyle({color: 'black', opacity: .7})
-        })
-        .on('pointerup', () => {
-          sprite.setFrame(1)
-          text.setStyle({color: 'white', opacity: 1})
-        })
-
-      button.add([sprite, text])
-      let x = +key === 0 ? 30 : +key === 1 ? 365 : 700
-      button.setX(x).setY(85)
-      buttonContainer.add(button)
-    }
+    //   button.add([sprite, text])
+    //   let x = +key === 0 ? 30 : +key === 1 ? 365 : 700
+    //   button.setX(x).setY(85)
+    //   buttonContainer.add(button)
+    // }
 
     buttonContainer.setY(1600)
   }

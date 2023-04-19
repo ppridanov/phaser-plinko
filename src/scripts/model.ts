@@ -138,7 +138,6 @@ export default class Model {
       this.selected = this.selected.map(item => {
         return { amount: item.amount * 2, button: item.button }
       })
-      console.log(this.selected);
       this.updateBalance(prevAmount);
       this.setAmount(amount);
       return this.selected
@@ -146,7 +145,6 @@ export default class Model {
   }
 
   clearBets() {
-    console.log('clear', this.selected)
     if (this.state.amount) {
       this.setBalance(this.state.amount + this.state.balance);
       this.setAmount(0);
