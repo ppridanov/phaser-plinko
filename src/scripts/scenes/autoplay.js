@@ -5,11 +5,34 @@ export default class Autoplay extends Phaser.Scene {
     super({ key: 'Autoplay' })
   }
 
-  preload() { 
-    this.load.plugin('rextoggleswitchplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rextoggleswitchplugin.min.js', true);    
+  preload() {
+    this.load.plugin(
+      'rextoggleswitchplugin',
+      'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rextoggleswitchplugin.min.js',
+      true
+    )
   }
 
   create() {
+    const ROUNDS_WIDTH = 310
+    const ROUNDS_MARGIN = 25
+    const SECOND_ROW_Y = 130
+    const AUTOSTOP_RECT_Y = 395
+    const AUTOPLAY_TITLES_Y = 455
+    const SECOND_STRING_Y = 510
+    const SWITCHER_Y = 130
+    const SWITCHER_X = 360
+    const ROUNDS_BTNS_X = 50
+    const ROUNDS_RECT_Y = 115
+    const PICK_TITLE_Y = 250
+    const COLOR_BTNS_Y = 324
+    const COLOR_BTN_WIDTH = 337
+    const COLOR_BTN_MARGIN = 35
+    const AUTOPLAY_TITLES_X = 80
+
+    this.CANVAS_WIDTH = this.sys.canvas.width
+    this.CANVAS_HEIGHT = this.sys.canvas.height
+
     const buttons = [
       { label: 'Зеленый', sprite: 'autoplay-colors-btns', onClick: null, color: 0x4dc900 },
       { label: 'Желтый', sprite: 'autoplay-colors-btns', onClick: null, color: 0xffe600 },
@@ -17,49 +40,66 @@ export default class Autoplay extends Phaser.Scene {
     ]
 
     const rounds = [
-      {
-        label: '3',
-        sprite: 'round-btns',
-        onClick: null
-      },
-      {
-        label: '10',
-        sprite: 'round-btns',
-        onClick: null
-      },
-      {
-        label: '25',
-        sprite: 'round-btns',
-        onClick: null
-      },
+      [
+        {
+          label: '3',
+          sprite: 'round-btns',
+          onClick: null
+        },
+        {
+          label: '10',
+          sprite: 'round-btns',
+          onClick: null
+        },
+        {
+          label: '25',
+          sprite: 'round-btns',
+          onClick: null
+        }
+      ],
+      [
+        {
+          label: '50',
+          sprite: 'round-btns',
+          onClick: null
+        },
+        {
+          label: '100',
+          sprite: 'round-btns',
+          onClick: null
+        },
+        {
+          label: '200',
+          sprite: 'round-btns',
+          onClick: null
+        }
+      ]
     ]
 
-    const rounds2 = [
-      {
-        label: '50',
-        sprite: 'round-btns',
-        onClick: null
-      },
-      {
-        label: '100',
-        sprite: 'round-btns',
-        onClick: null
-      },
-      {
-        label: '200',
-        sprite: 'round-btns',
-        onClick: null
-      },
-    ]
-
-    const autoplayHeader = {
+    const autoplayHeaderStyles = {
       font: `45px ${this.registry.get('font')}`,
       color: 'white'
     }
 
-    const autoplayParagraph = { font: `42px ${this.registry.get('font')}`, color: 'white' }
+    const autoplayParagraphStyles = {
+      font: `42px ${this.registry.get('font')}`,
+      color: 'white'
+    }
 
-    this.autoplayBg = this.add.image(0, 0, 'autoplay-bg').setOrigin(0)
+    const autoplayRoundsTitleStyles = {
+      font: `42px ${this.registry.get('font')}`,
+      wordWrap: {
+        width: 800,
+        useAdvancedWrap: true,
+        align: "left"
+      }
+    }
+
+    this.autoplayAllContainer = this.add.container();
+
+    this.headerContainer = this.add.container();
+
+    this.autoplayBg = this.add.image(0, 0, 'autoplay-bg').setOrigin(0).setAlpha(1);
     this.autoplayBg.setY(this.sys.canvas.height - this.autoplayBg.height)
 
     this.close = this.add.image(0, 0, 'autoplay-close').setOrigin(0)
@@ -68,20 +108,46 @@ export default class Autoplay extends Phaser.Scene {
       .setY(this.autoplayBg.y + 40)
       .setInteractive({ cursor: 'pointer' })
 
+    this.close.on('pointerdown', () => {
+      console.log("wtf")
+      this.tweens.add({
+        targets: this.autoplayAllContainer,
+        x: 0,
+        y: this.sys.canvas.height,
+        alpha: 0,
+        duration: 500,
+        onComplete: () => {
+          this.scene.stop(this);
+        }
+      })
+    })
+
     this.title = this.add
       .text(0, 0, 'Авто-режим', { font: `63px ${this.registry.get('font')}`, color: 'white' })
       .setOrigin(0)
     this.title.setX(this.sys.canvas.width / 2 - this.title.width / 2).setY(this.autoplayBg.y + 40)
 
+    this.headerContainer.add(this.autoplayBg);
+    this.headerContainer.add(this.close);
+    this.headerContainer.add(this.title);
+
     this.pickContainer = this.add.container()
-    this.pickTitle = this.add.text(0, 0, 'Выберите цвета', autoplayHeader).setOrigin(0)
-    this.pickTitle.setX(this.sys.canvas.width / 2 - this.pickTitle.width / 2).setY(this.autoplayBg.y + 250)
+    this.pickTitle = this.add.text(0, 0, 'Выберите цвета', autoplayHeaderStyles).setOrigin(0)
+    this.pickTitle.setX(this.sys.canvas.width / 2 - this.pickTitle.width / 2).setY(this.autoplayBg.y + PICK_TITLE_Y)
 
     this.buttons = this.add.container()
 
     buttons.forEach((button, index) => {
-      const x = 337 * index + 35
-      const btn = this.createButton(x, 0, button.label, button.sprite, button.onClick, button.color, autoplayParagraph)
+      const x = COLOR_BTN_WIDTH * index + COLOR_BTN_MARGIN
+      const btn = this.createButton(
+        x,
+        0,
+        button.label,
+        button.sprite,
+        button.onClick,
+        button.color,
+        autoplayParagraphStyles
+      )
       this.buttons.add(btn)
     })
     this.buttons.setY(this.autoplayBg.y + 324)
@@ -90,7 +156,7 @@ export default class Autoplay extends Phaser.Scene {
     this.pickContainer.add(this.buttons)
 
     this.roundsContainer = this.add.container()
-    this.roundsTitle = this.add.text(0, 0, 'Количество раундов', autoplayHeader).setOrigin(0)
+    this.roundsTitle = this.add.text(0, 0, 'Количество раундов', autoplayHeaderStyles).setOrigin(0)
     this.roundsTitle
       .setX(this.sys.canvas.width / 2 - this.roundsTitle.width / 2)
       .setY(this.autoplayBg.y + this.buttons.y - 10)
@@ -98,58 +164,75 @@ export default class Autoplay extends Phaser.Scene {
     this.roundsRect = this.add.image(0, 0, 'rounds-rect').setOrigin(0)
     this.roundsRect
       .setX(this.sys.canvas.width / 2 - this.roundsRect.width / 2)
-      .setY(this.autoplayBg.y + this.roundsTitle.y - 115)
-    
-    this.roundsBtns = this.add.container();
+      .setY(this.autoplayBg.y + this.roundsTitle.y - ROUNDS_RECT_Y)
 
-    rounds.forEach((round, index) => {
-        const x = 310 * index + 25;
-        const btn = this.createRoundsButton(x, 0, round.label, round.sprite, round.onClick, autoplayParagraph);
-        this.roundsBtns.add(btn);
-    });
+    this.roundsBtns = this.add.container()
 
-    rounds2.forEach((round, index) => {
-      const x = 310 * index + 25;
-      const btn = this.createRoundsButton(x, 130, round.label, round.sprite, round.onClick, autoplayParagraph);
-      this.roundsBtns.add(btn);
-  });
+    rounds.forEach((round, arrIndex) => {
+      round.map((item, index) => {
+        const x = ROUNDS_WIDTH * index + ROUNDS_MARGIN
+        const btn = this.createRoundsButton(
+          x,
+          arrIndex === 1 ? SECOND_ROW_Y : 0,
+          item.label,
+          item.sprite,
+          item.onClick,
+          autoplayParagraphStyles
+        )
+        console.log(index)
+        this.roundsBtns.add(btn)
+      })
+    })
 
-
-    this.roundsBtns.setY(this.roundsRect.y + 45).setX(50);
-    this.roundsContainer.add(this.roundsRect);
-    this.roundsContainer.add(this.roundsBtns);
-    this.roundsContainer.add(this.roundsTitle);
-
-
+    this.roundsBtns.setY(this.roundsRect.y + 45).setX(ROUNDS_BTNS_X)
+    this.roundsContainer.add(this.roundsRect)
+    this.roundsContainer.add(this.roundsBtns)
+    this.roundsContainer.add(this.roundsTitle)
 
     // autostop
-    this.autostopContainer = this.add.container();
-    this.autostopRect = this.add.image(0,0, "stop-round-rect").setOrigin(0);
+    this.autostopContainer = this.add.container()
+    this.autostopRect = this.add.image(0, 0, 'stop-round-rect').setOrigin(0)
 
-    this.autostopText1 = this.add.text(0,0,"Остановиться, если денежных ", autoplayHeader);
-    this.autostopText1.setX(this.sys.canvas.width / 2 - this.autostopText1.width / 2 + 80).setY(this.roundsRect.y + 455);
+    this.autostopRect
+      .setX(this.sys.canvas.width / 2 - this.autostopRect.width / 2)
+      .setY(this.roundsRect.y + AUTOSTOP_RECT_Y)
+    this.autostopContainer.add(this.autostopRect)
 
-    this.autostopText2 = this.add.text(0,0,"средсв останеться меньше чем", autoplayHeader);
-    this.autostopText2.setX(this.sys.canvas.width / 2 - this.autostopText2.width / 2 + 85).setY(this.roundsRect.y + 510);
+    this.autoplayTitles = this.add.text(0, 0, "Остановиться, если денежных средсв останеться меньше чем", autoplayRoundsTitleStyles);
 
-    this.autostopRect.setX(this.sys.canvas.width / 2 - this.autostopRect.width / 2).setY(this.roundsRect.y + 395);
+    this.autoplayTitles.setX(this.CANVAS_WIDTH / 2 - this.autoplayTitles.width / 2 + AUTOPLAY_TITLES_X).setY(this.roundsRect.y + AUTOPLAY_TITLES_Y)
 
-    this.autostopContainer.add(this.autostopContainer);
+    this.autostopContainer.add(this.autoplayTitles)
 
     // switch
-    this.switcher = this.add.rexToggleSwitch(this.sys.canvas.width / 2 - 360, this.autostopRect.y + 130, 150, 130, 0x6FDD00, {
-      trackHeight: 0.5,
-      trackWidth: 0.9,
+    this.switcher = this.add.rexToggleSwitch(
+      this.sys.canvas.width / 2 - SWITCHER_X,
+      this.autostopRect.y + SWITCHER_Y,
+      150,
+      130,
+      0x6fdd00,
+      {
+        trackHeight: 0.5,
+        trackWidth: 0.9,
 
-      thumbHeight: 0.4,
-      thumbWidth: 0.35,
-    });
+        thumbHeight: 0.4,
+        thumbWidth: 0.35,
+      }
+    )
 
     this.switcher.input.cursor = "pointer";
-    console.log(this.switcher)
 
-    this.buttonAccept = this.add.image(0,0,"button-accept").setOrigin(0).setFrame(1);
-    this.buttonAccept.setX(this.sys.canvas.width / 2 - this.buttonAccept.width / 2).setY(this.sys.canvas.height + 100).setInteractive({cursor: "pointer"});
+    this.autostopContainer.add(this.switcher)
+
+    this.buttonAccept = this.add.image(0, 0, 'button-accept').setOrigin(0).setFrame(1)
+    this.buttonAccept
+      .setX(this.sys.canvas.width / 2 - this.buttonAccept.width / 2)
+      .setY(this.sys.canvas.height + 100)
+      .setInteractive({ cursor: 'pointer' })
+
+    this.createCurrentBets()
+
+    this.autoplayAllContainer.add([this.headerContainer, this.autostopContainer, this.roundsContainer, this.pickContainer]);
   }
 
   createButton(x, y, label, sprite, onClick, color, styles) {
@@ -177,7 +260,7 @@ export default class Autoplay extends Phaser.Scene {
   createRoundsButton(x, y, label, sprite, onClick, styles) {
     const container = this.add.container()
 
-    const image = this.add.image(0, 0, sprite, 0).setOrigin(0).setInteractive({ cursor: 'pointer' }).setFrame(2);
+    const image = this.add.image(0, 0, sprite, 0).setFrame(2).setOrigin(0).setInteractive({ cursor: 'pointer' })
 
     image.on('pointerup', () => {
       image.setFrame(2)
@@ -188,10 +271,61 @@ export default class Autoplay extends Phaser.Scene {
     })
 
     const text = this.add.text(0, 0, label, styles).setOrigin(0)
-    text.setY(image.height / 2 - text.height / 2 - 10).setX(image.width / 2 - text.width / 2);
+    text.setY(image.height / 2 - text.height / 2 - 10).setX(image.width / 2 - text.width / 2)
 
     container.add([image, text]).setX(x).setY(y)
 
     return container
+  }
+
+  createCurrentBets() {
+    //bets
+    const betContainer = this.add.container()
+    const betsBg = this.add.image(0, 0, 'currents-bets-bg').setOrigin(0)
+
+    this.minus = this.add.image(0, 0, 'minus-button').setFrame(0).setOrigin(0)
+    this.minus.setX(32).setY(44)
+    this.minus
+      .setInteractive({ cursor: 'pointer' })
+      .on('pointerdown', () => {
+        this.onChangeBetDown(this.minus)
+      })
+      .on('pointerup', () => {
+        this.onChangeBetUp(this.minus)
+      })
+
+    this.plus = this.add.image(0, 0, 'plus-button').setFrame(2).setOrigin(0)
+    this.plus
+      .setX(betsBg.width - this.plus.width - 25)
+      .setY(44)
+      .setInteractive({ cursor: 'pointer' })
+      .on('pointerdown', () => {
+        this.onChangeBetDown(this.plus)
+      })
+      .on('pointerup', () => {
+        this.onChangeBetUp(this.plus)
+      })
+
+    this.currentBet = this.add.text(
+      0,
+      0,
+      0 + ' ₸',
+      Object.assign({
+        font: `48px ${this.registry.get('font')}`,
+        color: 'white'
+      }, { font: `62px ${this.registry.get('font')}` })
+    )
+    this.currentBet.setX(betsBg.width / 2 - this.currentBet.width / 2).setY(55)
+
+    betContainer.add([betsBg, this.plus, this.minus, this.currentBet])
+    betContainer.setY(this.sys.canvas.height - 500).setX(this.sys.canvas.width / 2 - betsBg.width / 2);
+  }
+
+  onChangeBetDown = target => {
+    target.setFrame(1)
+  }
+
+  onChangeBetUp = target => {
+    target.setFrame(2)
   }
 }
